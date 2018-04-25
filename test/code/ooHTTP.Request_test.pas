@@ -42,7 +42,7 @@ type
     procedure MethodIsPost;
     procedure HeadIsEmpty;
     procedure HeadHasFields;
-    procedure ResolveFail;
+    procedure Failback;
     procedure ResolveResponse;
   end;
 
@@ -81,7 +81,7 @@ begin
   CheckEquals('POST', Request.Method.Text);
 end;
 
-procedure THTTPRequestTest.ResolveFail;
+procedure THTTPRequestTest.Failback;
 var
   Request: IHTTPRequest;
   OnFail: TOnHTTPRequestFail;
@@ -92,7 +92,7 @@ begin
       CheckEquals('error test', Error);
     end;
   Request := THTTPRequest.New(_AccesPoint, _Method, _Head, _Body, nil, OnFail);
-  Request.ResolveFail(10, 'error test');
+  Request.Failback(10, 'error test');
 end;
 
 procedure THTTPRequestTest.ResolveResponse;
@@ -109,7 +109,7 @@ begin
   Request := THTTPRequest.New(_AccesPoint, _Method, _Head, _Body, OnResponse, nil);
   Stream := TStringStream.Create('test');
   try
-    Request.ResolveResponse(THTTPResponseStream.New(THTTPResponse.New(200), Stream));
+    Request.Callback(THTTPResponseStream.New(THTTPResponse.New(200), Stream));
   finally
     Stream.Free;
   end;

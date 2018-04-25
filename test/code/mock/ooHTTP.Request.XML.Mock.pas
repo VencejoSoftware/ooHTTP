@@ -36,8 +36,8 @@ type
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
     function ResponseContent: String;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const URI: String);
     class function New(const URI: String): IHTTPRequest;
   end;
@@ -64,14 +64,14 @@ begin
   Result := _HTTPRequest.Method;
 end;
 
-procedure THTTPRequestXMLMock.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequestXMLMock.Failback(const ErrorCode: Integer; const Error: String);
 begin
-  _HTTPRequest.ResolveFail(ErrorCode, Error);
+  _HTTPRequest.Failback(ErrorCode, Error);
 end;
 
-procedure THTTPRequestXMLMock.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequestXMLMock.Callback(const Response: IHTTPResponseStream);
 begin
-  _HTTPRequest.ResolveResponse(Response);
+  _HTTPRequest.Callback(Response);
 end;
 
 function THTTPRequestXMLMock.ResponseContent: String;

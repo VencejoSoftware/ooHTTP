@@ -39,8 +39,8 @@ type
   @member(AccesPoint @seealso(IHTTPRequest.AccesPoint))
   @member(Method @seealso(IHTTPRequest.Method))
   @member(Head @seealso(IHTTPRequest.Head))
-  @member(ResolveResponse @seealso(IHTTPRequest.ResolveResponse))
-  @member(ResolveFail @seealso(IHTTPRequest.ResolveFail))
+  @member(Callback @seealso(IHTTPRequest.Callback))
+  @member(Failback @seealso(IHTTPRequest.Failback))
   @member(
     Create Object constructor
     @param(AccesPoint Address to send)
@@ -69,8 +69,8 @@ type
     function Method: IHTTPMethod;
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
       const Body: IHTTPMessageBody; const OnResponse: TOnHTTPRequestResponseXML; const OnFail: TOnHTTPRequestFail);
     class function New(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
@@ -100,12 +100,12 @@ begin
   Result := _HTTPRequest.Method;
 end;
 
-procedure THTTPRequestXML.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequestXML.Failback(const ErrorCode: Integer; const Error: String);
 begin
-  _HTTPRequest.ResolveFail(ErrorCode, Error);
+  _HTTPRequest.Failback(ErrorCode, Error);
 end;
 
-procedure THTTPRequestXML.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequestXML.Callback(const Response: IHTTPResponseStream);
 var
   ResponseXML: IHTTPResponseXML;
 begin

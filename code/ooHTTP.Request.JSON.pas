@@ -40,8 +40,8 @@ type
   @member(Method @seealso(IHTTPRequest.Method))
   @member(Head @seealso(IHTTPRequest.Head))
   @member(Body @seealso(IHTTPRequest.Body))
-  @member(ResolveResponse @seealso(IHTTPRequest.ResolveResponse))
-  @member(ResolveFail @seealso(IHTTPRequest.ResolveFail))
+  @member(Callback @seealso(IHTTPRequest.Callback))
+  @member(Failback @seealso(IHTTPRequest.Failback))
   @member(
     Create Object constructor
     @param(AccesPoint Address to send)
@@ -70,8 +70,8 @@ type
     function Method: IHTTPMethod;
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
       const Body: IHTTPMessageBody; const OnResponse: TOnHTTPRequestResponseJSON; const OnFail: TOnHTTPRequestFail);
     class function New(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
@@ -101,12 +101,12 @@ begin
   Result := _HTTPRequest.Method;
 end;
 
-procedure THTTPRequestJSON.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequestJSON.Failback(const ErrorCode: Integer; const Error: String);
 begin
-  _HTTPRequest.ResolveFail(ErrorCode, Error);
+  _HTTPRequest.Failback(ErrorCode, Error);
 end;
 
-procedure THTTPRequestJSON.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequestJSON.Callback(const Response: IHTTPResponseStream);
 var
   ResponseJSON: IHTTPResponseJSON;
 begin

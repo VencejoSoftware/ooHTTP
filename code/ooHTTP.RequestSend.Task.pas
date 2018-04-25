@@ -64,6 +64,8 @@ type
     destructor Destroy; override;
   end;
 
+  ver de crear timeout o expiracion de request
+
 implementation
 
 procedure THTTPRequestSendTask.Execute;

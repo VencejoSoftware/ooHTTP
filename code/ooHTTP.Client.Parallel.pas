@@ -83,12 +83,12 @@ var
   Response: IHTTPResponseStream;
 begin
   Response := THTTPResponseStream.New(THTTPResponse.New(StatusCode), Stream);
-  Request.ResolveResponse(Response);
+  Request.Callback(Response);
 end;
 
 procedure THTTPClientParallel.OnSendFail(const Request: IHTTPRequest; const ErrorCode: Integer; const Error: String);
 begin
-  Request.ResolveFail(ErrorCode, Error);
+  Request.Failback(ErrorCode, Error);
 end;
 
 procedure THTTPClientParallel.ChangeProxy(const Proxy: IHTTPProxy);
@@ -102,20 +102,20 @@ var
   Request: IHTTPRequest;
   SendTask: THTTPRequestSendTask;
 begin
-  if not _SendSupervisor.CanCreateATask then
-    Exit;
   Request := _RequestStack.Pop;
-  if not Assigned(Request) then
-    Exit;
-  Connection := THTTPConnection.New(OnSendSuccess, OnSendFail, _Proxy);
-  SendTask := THTTPRequestSendTask.Create(Connection, Request);
-  _SendSupervisor.ExecuteTask(SendTask);
+  if Assigned(Request) then
+  begin
+    Connection := THTTPConnection.New(OnSendSuccess, OnSendFail, _Proxy);
+    SendTask := THTTPRequestSendTask.Create(Connection, Request);
+    _SendSupervisor.ExecuteTask(SendTask);
+  end;
 end;
 
 procedure THTTPClientParallel.Send(const Request: IHTTPRequest);
 begin
   _RequestStack.Push(Request);
-  TryRun;
+  if _SendSupervisor.CanCreateATask then
+    TryRun;
 end;
 
 constructor THTTPClientParallel.Create(const ConcurrentTasks: THTTPSupervisorMaxTasks);

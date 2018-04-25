@@ -38,8 +38,8 @@ type
     function Method: IHTTPMethod;
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const URI: String);
     class function New(const URI: String): IHTTPRequest;
   end;
@@ -66,9 +66,9 @@ begin
   Result := _HTTPRequest.Method;
 end;
 
-procedure THTTPRequestCountryMock.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequestCountryMock.Failback(const ErrorCode: Integer; const Error: String);
 begin
-  _HTTPRequest.ResolveFail(ErrorCode, Error);
+  _HTTPRequest.Failback(ErrorCode, Error);
 end;
 
 procedure THTTPRequestCountryMock.OnResponseXML(const Request: IHTTPRequest; const Response: IHTTPResponseXML);
@@ -89,9 +89,9 @@ begin
 // _ResponseContent := Response.Content.XML;
 end;
 
-procedure THTTPRequestCountryMock.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequestCountryMock.Callback(const Response: IHTTPResponseStream);
 begin
-  _HTTPRequest.ResolveResponse(Response);
+  _HTTPRequest.Callback(Response);
 end;
 
 constructor THTTPRequestCountryMock.Create(const URI: String);

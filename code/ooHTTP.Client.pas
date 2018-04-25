@@ -81,12 +81,12 @@ var
   Response: IHTTPResponseStream;
 begin
   Response := THTTPResponseStream.New(THTTPResponse.New(StatusCode), Stream);
-  Request.ResolveResponse(Response);
+  Request.Callback(Response);
 end;
 
 procedure THTTPClient.OnSendFail(const Request: IHTTPRequest; const ErrorCode: Integer; const Error: String);
 begin
-  Request.ResolveFail(ErrorCode, Error);
+  Request.Failback(ErrorCode, Error);
 end;
 
 procedure THTTPClient.ChangeProxy(const Proxy: IHTTPProxy);

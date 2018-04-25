@@ -43,8 +43,8 @@ type
     procedure MethodIsPost;
     procedure HeadIsEmpty;
     procedure HeadHasFields;
-    procedure ResolveFail;
-    procedure ResolveResponse;
+    procedure Failback;
+    procedure Callback;
   end;
 
 implementation
@@ -82,7 +82,7 @@ begin
   CheckEquals('POST', Request.Method.Text);
 end;
 
-procedure THTTPRequestJsonTest.ResolveFail;
+procedure THTTPRequestJsonTest.Failback;
 var
   Request: IHTTPRequest;
   OnFail: TOnHTTPRequestFail;
@@ -93,10 +93,10 @@ begin
       CheckEquals('error test', Error);
     end;
   Request := THTTPRequestJson.New(_AccesPoint, _Method, _Head, _Body, nil, OnFail);
-  Request.ResolveFail(10, 'error test');
+  Request.Failback(10, 'error test');
 end;
 
-procedure THTTPRequestJsonTest.ResolveResponse;
+procedure THTTPRequestJsonTest.Callback;
 var
   Request: IHTTPRequest;
   OnResponse: TOnHTTPRequestResponseJSON;
@@ -110,7 +110,7 @@ begin
   Request := THTTPRequestJson.New(_AccesPoint, _Method, _Head, _Body, OnResponse, nil);
   Stream := TStringStream.Create('{"field": "123"}');
   try
-    Request.ResolveResponse(THTTPResponseStream.New(THTTPResponse.New(200), Stream));
+    Request.Callback(THTTPResponseStream.New(THTTPResponse.New(200), Stream));
   finally
     Stream.Free;
   end;

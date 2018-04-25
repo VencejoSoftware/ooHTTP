@@ -37,8 +37,8 @@ type
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
     function ResponseContent: String;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const URI: String);
     class function New(const URI: String): IHTTPRequest;
   end;
@@ -65,14 +65,14 @@ begin
   Result := _HTTPRequest.Method;
 end;
 
-procedure THTTPRequestJSONMock.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequestJSONMock.Failback(const ErrorCode: Integer; const Error: String);
 begin
-  _HTTPRequest.ResolveFail(ErrorCode, Error);
+  _HTTPRequest.Failback(ErrorCode, Error);
 end;
 
-procedure THTTPRequestJSONMock.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequestJSONMock.Callback(const Response: IHTTPResponseStream);
 begin
-  _HTTPRequest.ResolveResponse(Response);
+  _HTTPRequest.Callback(Response);
 end;
 
 function THTTPRequestJSONMock.ResponseContent: String;

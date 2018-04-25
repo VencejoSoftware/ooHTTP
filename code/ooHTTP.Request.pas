@@ -32,11 +32,11 @@ type
   @member(Head Request header)
   @member(Body Request body)
   @member(
-    ResolveResponse Procedure called for the connection when the server response
+    Callback Procedure called for the connection when the server response
     @param(Response Response stream with raw stream)
   )
   @member(
-    ResolveFail Procedure called for the connection for exception raised
+    Failback Procedure called for the connection for exception raised
     @param(ErrorCode Code of error)
     @param(Error Error message)
   )
@@ -48,8 +48,8 @@ type
     function Method: IHTTPMethod;
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
   end;
 
 {$REGION 'documentation'}
@@ -79,8 +79,8 @@ type
   @member(Method @seealso(IHTTPRequest.Method))
   @member(Head @seealso(IHTTPRequest.Head))
   @member(Body @seealso(IHTTPRequest.Body))
-  @member(ResolveResponse @seealso(IHTTPRequest.ResolveResponse))
-  @member(ResolveFail @seealso(IHTTPRequest.ResolveFail))
+  @member(Callback @seealso(IHTTPRequest.Callback))
+  @member(Failback @seealso(IHTTPRequest.Failback))
   @member(
     Create Object constructor
     @param(AccesPoint Resouce access point)
@@ -113,8 +113,8 @@ type
     function Method: IHTTPMethod;
     function Head: IHTTPMessageHead;
     function Body: IHTTPMessageBody;
-    procedure ResolveResponse(const Response: IHTTPResponseStream);
-    procedure ResolveFail(const ErrorCode: Integer; const Error: String);
+    procedure Callback(const Response: IHTTPResponseStream);
+    procedure Failback(const ErrorCode: Integer; const Error: String);
     constructor Create(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
       const Body: IHTTPMessageBody; const OnResponse: TOnHTTPRequestResponse; const OnFail: TOnHTTPRequestFail);
     class function New(const AccesPoint: INetAccessPoint; const Method: IHTTPMethod; const Head: IHTTPMessageHead;
@@ -144,13 +144,13 @@ begin
   Result := _Body;
 end;
 
-procedure THTTPRequest.ResolveResponse(const Response: IHTTPResponseStream);
+procedure THTTPRequest.Callback(const Response: IHTTPResponseStream);
 begin
   if Assigned(_OnResponse) then
     _OnResponse(Self, Response);
 end;
 
-procedure THTTPRequest.ResolveFail(const ErrorCode: Integer; const Error: String);
+procedure THTTPRequest.Failback(const ErrorCode: Integer; const Error: String);
 begin
   if Assigned(_OnFail) then
     _OnFail(Self, ErrorCode, Error);
